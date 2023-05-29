@@ -1,44 +1,77 @@
 import { createStore } from "redux";
+import { createSlice, configureStore } from "@reduxjs/toolkit";
 
-const initialState = {
+///counter slice///
+const initialCounterState = {
   counter: 0,
-};
-const counterReducer = (state = initialState, action) => {
-  if (action.type === "increment") {
-    return {
-      ...state,
-      counter: state.counter + 1,
-    };
-  } else if (action.type === "decrement") {
-    return {
-      ...state,
-      counter: state.counter - 1,
-    };
-  } else if (action.type === "incrementbytwo") {
-    return {
-      ...state,
-      counter: state.counter + 2,
-    };
-  } else if (action.type === "decrementbytwo") {
-    return {
-      ...state,
-      counter: state.counter - 2,
-    };
-  } else if (action.type === "incrementbyfive") {
-    return {
-      ...state,
-      counter: state.counter + 5,
-    };
-  } else if (action.type === "decrementbyfive") {
-    return {
-      ...state,
-      counter: state.counter - 5,
-    };
-  }
-
-  return state;
+  showCounter: true,
 };
 
-const store = createStore(counterReducer);
+const counterSlice = createSlice({
+  name: "counter",
+  initialState: initialCounterState,
+  reducers: {
+    increment(state, action) {
+      state.counter = state.counter + action.payload;
+    },
+    decrement(state, action) {
+      state.counter = state.counter - action.payload;
+    },
+    toggle(state) {
+      state.showCounter = !state.showCounter;
+    },
+  },
+});
 
+///--end of counter slice--///
+
+///---authslice--///
+
+const initialAuthState = {
+  isAuthenticated: false,
+};
+
+const authSlice = createSlice({
+  name: "auth",
+  initialState: initialAuthState,
+  reducers: {
+    login(state) {
+      state.isAuthenticated = true;
+    },
+    logout(state) {
+      state.isAuthenticated = false;
+    },
+  },
+});
+
+// const counterReducer = (state = initialState, action) => {
+//   if (action.type === "increment") {
+//     return {
+//       ...state,
+//       counter: state.counter + action.value,
+//     };
+//   } else if (action.type === "decrement") {
+//     return {
+//       ...state,
+//       counter: state.counter - action.value,
+//     };
+//   } else if (action.type === "toggle") {
+//     return {
+//       ...state,
+//       showCounter: !state.showCounter,
+//     };
+//   }
+
+//   return state;
+// };
+
+const store = configureStore({
+  reducer: {
+    counter: counterSlice.reducer,
+    auth: authSlice.reducer,
+  },
+});
+
+export const { increment, decrement, toggle } = counterSlice.actions;
+export const { login, logout } = authSlice.actions;
 export default store;
